@@ -18,14 +18,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import randomNumber from "../../utils/randomNumber";
 import { CreateValidator } from "../../validators/inventoryValidators";
-/*
-Create a screen that shows a form that allows users create new items and add them to the inventory, a user should be able to enter the item's name, total stock, price, and description. All fields should be validated to meet the following.
 
-Name is required, and must be unique.
-Total stock is required and must be a number.
-Price is required and must be a number.
-Description is required and must have at least three words.
-*/
 type Props = {
   navigation: any;
 };

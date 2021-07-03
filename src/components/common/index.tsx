@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Image, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native";
 import { BackButton } from "./button";
 import { MacBook, Acer, Hp, Toshiba } from "../../assets/images";
 
@@ -16,6 +16,7 @@ type ItemProps = {
   quantity: number;
   currency: string;
   category: string;
+  navigation: any;
 };
 
 export const Header = ({ navigation, headerText }: Props) => {
@@ -44,6 +45,7 @@ export const SingleItems = ({
   quantity,
   currency,
   category,
+  navigation,
 }: ItemProps) => {
   const categoryImage =
     category === "Toshiba laptops"
@@ -55,7 +57,10 @@ export const SingleItems = ({
       : Acer;
 
   return (
-    <View style={styles.singleBg}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("EditInventory", { name: name })}
+      style={styles.singleBg}
+    >
       <View style={styles.upperCont}>
         <Image source={categoryImage} style={styles.contentImage} />
       </View>
@@ -69,7 +74,7 @@ export const SingleItems = ({
           </Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -39,6 +39,7 @@ export default function InventoryScreen({ navigation }: Props) {
           {defaultItems.map(item => (
             <SingleItems
               key={item.id}
+              navigation={navigation}
               name={item.name}
               unit_price={item.unit_price}
               quantity={item.quantity}

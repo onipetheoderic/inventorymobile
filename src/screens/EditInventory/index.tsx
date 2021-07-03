@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import randomNumber from "../../utils/randomNumber";
 import { EditValidator } from "../../validators/inventoryValidators";
+
 /*
 Create a screen that shows a form that allows users create new items and add them to the inventory, a user should be able to enter the item's name, total stock, price, and description. All fields should be validated to meet the following.
 
@@ -26,10 +27,8 @@ Total stock is required and must be a number.
 Price is required and must be a number.
 Description is required and must have at least three words.
 */
-type Props = {
-  navigation: any;
-};
-export default function CreateInventoryScreen({ navigation }: Props) {
+
+export default function CreateInventoryScreen(props) {
   const [defaultItems, setDefaultItems] = useState([]);
 
   const [value, changeValue] = useState({
@@ -51,21 +50,21 @@ export default function CreateInventoryScreen({ navigation }: Props) {
     changeValue({ ...value, [name]: text });
   };
 
-  const populateCurrent = (mainItem: string, text: string) => {
-    console.log("the vals", text);
-    //lets filter it
-    const singleItem = defaultItems.filter(a => a.name == text);
-    const { name, quantity, unit_price, description } = singleItem[0];
-    console.log(singleItem[0], "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
-    changeValue({
-      name: name,
-      quantity: quantity.toString(),
-      unit_price: unit_price.toString(),
-      description: description,
-    });
-    setShowOptions(true);
-    changeValueMain({ ...valueMain, [mainItem]: text });
-  };
+  // const populateCurrent = (mainItem: string, text: string) => {
+  //   console.log("the vals", text);
+  //   //lets filter it
+  //   const singleItem = defaultItems.filter(a => a.name == text);
+  //   const { name, quantity, unit_price, description } = singleItem[0];
+  //   console.log(singleItem[0], "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
+  //   changeValue({
+  //     name: name,
+  //     quantity: quantity.toString(),
+  //     unit_price: unit_price.toString(),
+  //     description: description,
+  //   });
+  //   setShowOptions(true);
+  //   changeValueMain({ ...valueMain, [mainItem]: text });
+  // };
 
   const iconMaker = (img: string) => (
     <Entypo name="plus" size={16} color="white" />
@@ -119,26 +118,31 @@ export default function CreateInventoryScreen({ navigation }: Props) {
         category: "",
         description: "",
       });
-      navigation.navigate("InventoryScreen");
+      props.navigation.navigate("InventoryScreen");
     }
   };
 
   useEffect(() => {
     (async () => {
+      const incomingItem = props.route.params.name;
       try {
         let items = await AsyncStorage.getItem("@inventory");
         if (items != null) {
           const parsedItem = JSON.parse(items);
           setDefaultItems(parsedItem);
+          const singleItem = defaultItems.filter(a => a.name == incomingItem);
+          const { name, quantity, unit_price, description } = singleItem[0];
+          changeValue({
+            name: name,
+            quantity: quantity.toString(),
+            unit_price: unit_price.toString(),
+            description: description,
+          });
         }
       } catch (e) {}
     })();
   }, []);
-  /*
-const increment = useCallback(() => {
-  setCount(count + 1)
-}, [count])
-*/
+
   const itemNamesCollection = () => {
     let itemCollection = [];
     for (var i in itemNames) {
@@ -153,17 +157,17 @@ const increment = useCallback(() => {
 
   return (
     <View>
-      <Header navigation={navigation} headerText="Edit Inventory" />
+      <Header navigation={props.navigation} headerText="Edit Inventory" />
 
       <KeyboardAwareScrollView>
         <View style={styles.formCont}>
-          <SelectField
+          {/* <SelectField
             name="mainItem"
             handleForm={populateCurrent}
             value={valueMain.mainItem}
             label="Select Inventory Item to Edit"
             collection={itemNamesCollection()}
-          />
+          /> */}
           <View style={styles.spacer} />
 
           <FormField
