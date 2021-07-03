@@ -1,6 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Righteous_400Regular, useFonts } from "@expo-google-fonts/righteous";
+import { Righteous_400Regular } from "@expo-google-fonts/righteous";
 import { FasterOne_400Regular } from "@expo-google-fonts/faster-one";
 import { FredokaOne_400Regular } from "@expo-google-fonts/fredoka-one";
 import { ReemKufi_400Regular } from "@expo-google-fonts/reem-kufi";
@@ -11,11 +10,7 @@ import DrawerNavigator from "./navigation/DrawerNavigation";
 import AsyncStorage from "@react-native-community/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { Root } from "native-base";
-import {
-  createStackNavigator,
-  TransitionPresets,
-} from "@react-navigation/stack";
-
+import { useFonts } from "expo-font";
 import { defaultItems } from "./dummy/inventoryItems";
 
 export default function App() {
@@ -26,7 +21,6 @@ export default function App() {
       if (items === null) {
         AsyncStorage.setItem("@inventory", JSON.stringify(defaultItems));
       }
-      console.log(items, "Items present already");
     } catch (error) {
       console.log(error);
     }

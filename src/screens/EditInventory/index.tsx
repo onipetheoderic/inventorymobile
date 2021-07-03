@@ -18,24 +18,17 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import randomNumber from "../../utils/randomNumber";
 import { EditValidator } from "../../validators/inventoryValidators";
+import { useIsFocused } from "@react-navigation/native";
+import Modal from "react-native-modal";
 
-/*
-Create a screen that shows a form that allows users create new items and add them to the inventory, a user should be able to enter the item's name, total stock, price, and description. All fields should be validated to meet the following.
-
-Name is required, and must be unique.
-Total stock is required and must be a number.
-Price is required and must be a number.
-Description is required and must have at least three words.
-*/
-
-export default function CreateInventoryScreen(props) {
-  const [defaultItems, setDefaultItems] = useState([]);
-
+export default function CreateInventoryScreen(props: any) {
+  const [defaultItems, setDefaultItems] = useState<any[]>([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const isFocused = useIsFocused();
   const [value, changeValue] = useState({
     name: "",
-    unit_price: 0,
-    quantity: 0,
-    category: "",
+    unit_price: "0",
+    quantity: "0",
     description: "",
   });
 
@@ -50,41 +43,17 @@ export default function CreateInventoryScreen(props) {
     changeValue({ ...value, [name]: text });
   };
 
-  // const populateCurrent = (mainItem: string, text: string) => {
-  //   console.log("the vals", text);
-  //   //lets filter it
-  //   const singleItem = defaultItems.filter(a => a.name == text);
-  //   const { name, quantity, unit_price, description } = singleItem[0];
-  //   console.log(singleItem[0], "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUU");
-  //   changeValue({
-  //     name: name,
-  //     quantity: quantity.toString(),
-  //     unit_price: unit_price.toString(),
-  //     description: description,
-  //   });
-  //   setShowOptions(true);
-  //   changeValueMain({ ...valueMain, [mainItem]: text });
-  // };
-
   const iconMaker = (img: string) => (
     <Entypo name="plus" size={16} color="white" />
   );
   let itemNames = defaultItems.map(a => a.name);
 
-  const categoryCollection = [
-    { name: "Asus laptops", value: "Asus laptops" },
-    { name: "Apple laptops", value: "Apple laptops" },
-    { name: "Toshiba laptops", value: "Toshiba laptops" },
-    { name: "Hp laptops", value: "Hp laptops" },
-    { name: "Macbook laptops", value: "Macbook laptops" },
-  ];
-
   const saveItems = (): void => {
     let { success, message } = EditValidator(value);
-    console.log(success, message, "UUUUUUUU");
+    const msg = "" + message;
     if (success === false) {
       Toast.show({
-        text: message,
+        text: msg,
         buttonText: "Okay",
         duration: 5000,
         type: "danger",
@@ -113,9 +82,8 @@ export default function CreateInventoryScreen(props) {
       });
       changeValue({
         name: "",
-        unit_price: 0,
-        quantity: 0,
-        category: "",
+        unit_price: "0",
+        quantity: "0",
         description: "",
       });
       props.navigation.navigate("InventoryScreen");
@@ -141,33 +109,58 @@ export default function CreateInventoryScreen(props) {
         }
       } catch (e) {}
     })();
-  }, []);
+  }, [props.navigation, isFocused]);
 
-  const itemNamesCollection = () => {
-    let itemCollection = [];
-    for (var i in itemNames) {
-      let obj = {
-        name: itemNames[i],
-        value: itemNames[i],
-      };
-      itemCollection.push(obj);
-    }
-    return itemCollection;
+  const deleteItem = () => {
+    setModalVisible(true);
   };
-
+  const approvedDelete = () => {
+    const incomingItem = props.route.params.name;
+    let newArr = defaultItems.filter(a => a.name != incomingItem);
+    AsyncStorage.setItem("@inventory", JSON.stringify(newArr));
+    Toast.show({
+      text: "Item Deleted Successfully",
+      buttonText: "Okay",
+      duration: 5000,
+      type: "success",
+    });
+    changeValue({
+      name: "",
+      unit_price: "0",
+      quantity: "0",
+      description: "",
+    });
+    setModalVisible(false);
+    props.navigation.navigate("InventoryScreen");
+  };
+  const noDelete = () => {
+    setModalVisible(false);
+  };
   return (
     <View>
       <Header navigation={props.navigation} headerText="Edit Inventory" />
 
       <KeyboardAwareScrollView>
         <View style={styles.formCont}>
-          {/* <SelectField
-            name="mainItem"
-            handleForm={populateCurrent}
-            value={valueMain.mainItem}
-            label="Select Inventory Item to Edit"
-            collection={itemNamesCollection()}
-          /> */}
+          <Modal isVisible={isModalVisible}>
+            <View style={styles.modalCont}>
+              <Text style={styles.modalText}>
+                Are you sure you want to delete this Item
+              </Text>
+              <TouchableOpacity
+                onPress={() => approvedDelete()}
+                style={styles.yesButton}
+              >
+                <Text style={styles.modalText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => noDelete()}
+                style={styles.noButton}
+              >
+                <Text style={styles.modalText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
           <View style={styles.spacer} />
 
           <FormField
@@ -213,6 +206,8 @@ export default function CreateInventoryScreen(props) {
 
           <View style={styles.spacer} />
           <Button onPress={() => saveItems()} title="Finish Editing" />
+          <View style={styles.spacer} />
+          <Button onPress={() => deleteItem()} title="Delete Item" />
         </View>
       </KeyboardAwareScrollView>
     </View>
@@ -220,6 +215,31 @@ export default function CreateInventoryScreen(props) {
 }
 
 const styles = StyleSheet.create({
+  yesButton: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+  },
+  noButton: {
+    marginTop: 10,
+    backgroundColor: "gray",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 40,
+  },
+  modalText: {
+    fontFamily: "ReemKufi_400Regular",
+    textAlign: "center",
+
+    fontSize: 17,
+  },
+  modalCont: {
+    width: "93%",
+    alignSelf: "center",
+    height: 150,
+    backgroundColor: "white",
+  },
   formCont: {
     marginTop: 20,
     width: "90%",

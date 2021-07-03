@@ -19,19 +19,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import randomNumber from "../../utils/randomNumber";
 import { CreateValidator } from "../../validators/inventoryValidators";
 
-type Props = {
-  navigation: any;
-};
-export default function CreateInventoryScreen({ navigation }: Props) {
-  const [defaultItems, setDefaultItems] = useState([]);
+export default function CreateInventoryScreen(props: any) {
+  const [defaultItems, setDefaultItems] = useState<any[]>([]);
 
   const [value, changeValue] = useState({
     name: "",
-    unit_price: 0,
-    quantity: 0,
+    unit_price: "0",
+    quantity: "0",
     category: "",
     description: "",
-    category: "",
   });
 
   const handleForm = (name: string, text: string) => {
@@ -54,10 +50,10 @@ export default function CreateInventoryScreen({ navigation }: Props) {
 
   const saveItems = (): void => {
     let { success, message } = CreateValidator(value, itemNames);
-    console.log(success, message, "UUUUUUUU");
+    const msg = "" + message;
     if (success === false) {
       Toast.show({
-        text: message,
+        text: msg,
         buttonText: "Okay",
         duration: 5000,
         type: "danger",
@@ -81,13 +77,12 @@ export default function CreateInventoryScreen({ navigation }: Props) {
       });
       changeValue({
         name: "",
-        unit_price: 0,
-        quantity: 0,
+        unit_price: "0",
+        quantity: "0",
         category: "",
         description: "",
-        category: "",
       });
-      navigation.navigate("InventoryScreen");
+      props.navigation.navigate("InventoryScreen");
     }
   };
 
@@ -105,7 +100,7 @@ export default function CreateInventoryScreen({ navigation }: Props) {
 
   return (
     <View>
-      <Header navigation={navigation} headerText="Create Inventory" />
+      <Header navigation={props.navigation} headerText="Create Inventory" />
 
       <View style={styles.addIcon}>
         <Entypo name="plus" size={52} color="white" />

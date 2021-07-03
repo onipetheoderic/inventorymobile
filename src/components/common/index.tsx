@@ -31,8 +31,6 @@ export const Header = ({ navigation, headerText }: Props) => {
           toIcon="menu"
           height={60}
           width={60}
-          left={20}
-          top={30}
         />
       </View>
     </View>

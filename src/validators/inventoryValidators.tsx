@@ -1,8 +1,15 @@
 type validatorField = {
   name: string;
-  unit_price: number;
-  quantity: number;
+  unit_price: string;
+  quantity: string;
   category: string;
+  description: string;
+};
+
+type editValidatorField = {
+  name: string;
+  unit_price: string;
+  quantity: string;
   description: string;
 };
 export const CreateValidator = (fields: validatorField, itemNames: any[]) => {
@@ -36,7 +43,7 @@ export const CreateValidator = (fields: validatorField, itemNames: any[]) => {
   }
 };
 
-export const EditValidator = (fields: validatorField) => {
+export const EditValidator = (fields: editValidatorField) => {
   let { name, unit_price, quantity, description } = fields;
   if (name.length < 1) {
     return { success: false, message: "name is required" };

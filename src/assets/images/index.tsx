@@ -1,6 +1,6 @@
-import BlueLogo from "./blue-logo.png";
-import MacBook from "./mac-book.png";
-import Acer from "./acer.png";
-import Hp from "./hp.png";
-import Toshiba from "./toshiba.png";
+const BlueLogo = require("./blue-logo.png");
+const MacBook = require("./mac-book.png");
+const Acer = require("./acer.png");
+const Hp = require("./hp.png");
+const Toshiba = require("./toshiba.png");
 export { BlueLogo, MacBook, Acer, Hp, Toshiba };

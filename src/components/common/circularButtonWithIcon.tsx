@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { TouchableOpacity } from "react-native";
 
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 type Props = {
-  navigation: any;
   onPress: any;
   iconName: string;
   toIcon: string;
@@ -20,7 +13,6 @@ type Props = {
 };
 export default function CircularButtonWithIcon({
   toIcon,
-  navigation,
   iconName,
   height,
   width,
@@ -28,7 +20,6 @@ export default function CircularButtonWithIcon({
 }: Props) {
   const [current, changeCurrent] = useState(true);
 
-  const borderRadius = height / 2;
   const currentIcon = current === true ? iconName : toIcon;
   return (
     <TouchableOpacity
@@ -56,7 +47,7 @@ export default function CircularButtonWithIcon({
       }}
     >
       <Feather
-        name={currentIcon}
+        name="menu"
         style={{ color: "black", alignSelf: "center" }}
         size={height / 2}
       />

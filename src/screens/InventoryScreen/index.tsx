@@ -12,11 +12,8 @@ import { Header, SingleItems } from "../../components/common";
 import AsyncStorage from "@react-native-community/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 
-type Props = {
-  navigation: any;
-};
-export default function InventoryScreen({ navigation }: Props) {
-  const [defaultItems, setDefaultItems] = useState([]);
+export default function InventoryScreen(props: any) {
+  const [defaultItems, setDefaultItems] = useState<any[]>([]);
   const isFocused = useIsFocused();
   useEffect(() => {
     (async () => {
@@ -28,18 +25,18 @@ export default function InventoryScreen({ navigation }: Props) {
         }
       } catch (e) {}
     })();
-  }, [navigation, isFocused]);
+  }, [props.navigation, isFocused]);
 
   return (
     <View>
-      <Header navigation={navigation} headerText="Inventory Listing" />
+      <Header navigation={props.navigation} headerText="Inventory Listing" />
 
       <ScrollView>
         <View style={styles.listingContainer}>
           {defaultItems.map(item => (
             <SingleItems
               key={item.id}
-              navigation={navigation}
+              navigation={props.navigation}
               name={item.name}
               unit_price={item.unit_price}
               quantity={item.quantity}
@@ -50,7 +47,7 @@ export default function InventoryScreen({ navigation }: Props) {
         </View>
       </ScrollView>
       <TouchableOpacity
-        onPress={() => navigation.navigate("CreateInventory")}
+        onPress={() => props.navigation.navigate("CreateInventory")}
         style={styles.addButton}
       >
         <Entypo name="plus" size={32} color="white" />

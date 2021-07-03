@@ -13,21 +13,16 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import CreateInventory from "../screens/CreateInventory";
 import EditInventory from "../screens/EditInventory";
-import DeleteInventory from "../screens/DeleteInventory";
 import InventoryScreen from "../screens/InventoryScreen";
-
-import BlueLogo from "../assets/images";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
-  function CustomDrawerContent({ navigation }) {
+  function CustomDrawerContent(props: any) {
     return (
       <>
         <View style={styles.transparentLogoCont}>
-          <View style={styles.logoView}>
-            <Image source={BlueLogo} style={styles.logoImage} />
-          </View>
+          <View style={styles.logoView}></View>
 
           <>
             <Text style={styles.nameText}>Theoderic</Text>
@@ -35,31 +30,17 @@ const DrawerNavigator = () => {
           </>
         </View>
         <TouchableOpacity
-          onPress={() => navigation.navigate("InventoryScreen")}
+          onPress={() => props.navigation.navigate("InventoryScreen")}
           style={styles.drawerItems}
         >
           <Text style={styles.textStyle}>Inventory Listing</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("CreateInventory")}
+          onPress={() => props.navigation.navigate("CreateInventory")}
           style={styles.drawerItems}
         >
           <Text style={styles.textStyle}>Create Inventory</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate("EditInventory")}
-          style={styles.drawerItems}
-        >
-          <Text style={styles.textStyle}>Edit Inventory</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => navigation.navigate("DeleteInventory")}
-          style={styles.drawerItems}
-        >
-          <Text style={styles.textStyle}>Delete Inventory</Text>
         </TouchableOpacity>
       </>
     );
@@ -92,16 +73,6 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="EditInventory"
         component={EditInventory}
-        options={({ route, navigation }) => {
-          return {
-            swipeEnabled: true,
-          };
-        }}
-      />
-
-      <Drawer.Screen
-        name="DeleteInventory"
-        component={DeleteInventory}
         options={({ route, navigation }) => {
           return {
             swipeEnabled: true,
